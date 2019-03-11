@@ -7,7 +7,7 @@ const Wallet = SwtcLib.Wallet
 const moment = require('moment')
 const sleep_promise = time => new Promise(res => setTimeout(() => res(), time))
 
-const fastPayment = async function (from_wallet_or_secret, to_list_of_wallets_or_addresses, default_quantity, currency='swt', default_memo="", server_to_use=toolset.REMOTE.server) {
+const fastPayment = async function (from_wallet_or_secret, to_list_of_wallets_or_addresses, default_quantity, currency='swt', server_to_use=toolset.REMOTE.server, default_memo='') {
 	let ready_to_send=false, result={}, from_wallet={}, to_wallets=[], not_to_wallets=[], retry_max=2, remote
 	try {
 		from_wallet = typeof from_wallet_or_secret === 'object' ? from_wallet_or_secret : Wallet.fromSecret(from_wallet_or_secret)
@@ -51,11 +51,17 @@ const fastPayment = async function (from_wallet_or_secret, to_list_of_wallets_or
 	try {
 		remote = new Remote({ server: server_to_use, local_sign: true })
 		await remote.connectAsync()
+		console.log("remote connected")
 		ready_to_send = true
-		let account_info = await toolset.requestAccountInfo(remote, from_wallet).submitAsync()
-		from_wallet.balance_initial = Number(account_info.account_data.Balance) / 1000000
-		from_wallet.sequence = account_info.account_data.Sequence
-		from_wallet.ready = true
+		try {
+			let account_info = await toolset.requestAccountInfo(remote, from_wallet).submitAsync()
+			from_wallet.balance_initial = Number(account_info.account_data.Balance) / 1000000
+			from_wallet.sequence = account_info.account_data.Sequence
+			from_wallet.ready = true
+		} catch (error) {
+			remote.disconnect()
+			return Promise.reject('need a valid wallet to send')
+		}
 		result.success_wallets = []
 		result.failure_wallets = []
 		while (ready_to_send && to_wallets.length > 0) {
@@ -110,15 +116,16 @@ const fastPayment = async function (from_wallet_or_secret, to_list_of_wallets_or
 				return Promise.reject(error)
 			}
 		}
-		account_info = await toolset.requestAccountInfo(remote, from_wallet).submitAsync()
+		let account_info = await toolset.requestAccountInfo(remote, from_wallet).submitAsync()
 		from_wallet.balance_current = Number(account_info.account_data.Balance) / 1000000
 		console.log(from_wallet)
+		remote.disconnect()
 		return Promise.resolve(result)
 	} catch (error) {
+		remote.disconnect()
 		return Promise.reject(error)
 	}
 }
-
 
 module.exports = fastPayment
 

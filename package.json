@@ -1,13 +1,26 @@
 {
   "name": "swtc-tool-fast-payment",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "fast send payments on jingtum blockchain",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/test*.js"
+    "test": "mocha --timeout 15000 test/test*.js"
   },
-  "keywords": [],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swtcca/swtc-tool-fast-payment.git"
+  },
+  "keywords": [
+    "swtc",
+    "jingtum",
+    "payment"
+  ],
+  "author": "Lospring Liu <lospringliu@gmail.com>",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/swtcca/swtc-tool-fast-payment/issues"
+  },
+  "homepage": "https://github.com/swtcca/swtc-tool-fast-payment#readme",
   "license": "ISC",
   "dependencies": {
     "swtc-lib": "^1.6.4",

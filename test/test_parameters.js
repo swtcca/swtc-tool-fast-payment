@@ -31,5 +31,12 @@ describe('fastPayment parameters', function () {
             	expect(error).to.equal('provide a list of addresses to send to')
 			}
         })
+        it('should reject with valid inactivated wallet or secret', async function () {
+			try {
+				let result = await fastPayment(wallet,[wallet], 1)
+			} catch (error) {
+				expect(error).to.equal('need a valid wallet to send')
+			}
+        })
     })
 })
