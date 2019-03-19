@@ -26,7 +26,7 @@ var to_wallets = [
 ]
 var default_quantity = 1
 const token_to_send = 'swt'
-const server_to_use = 'ws://ts5.jigntum.com:5020'
+const server_to_use = 'ws://swtclib.daszichan.com:5020'
 default_memo = 'memo: '
 fastPayment(from_wallet, to_wallets, default_quantity, token_to_send, server_to_use, default_memo)
 	.then( (result) => console.log(result) )

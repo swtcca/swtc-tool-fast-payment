@@ -74,7 +74,7 @@ const fastPayment = async function (from_wallet_or_secret, to_list_of_wallets_or
 				var tx = toolset.buildPaymentTx(remote, {
 						account: from_wallet.address,
 						to: to_wallet.address,
-						amount: toolset.makeAmount(currency, Number(to_wallet.quantity))
+						amount: toolset.makeAmount(Number(to_wallet.quantity), currency)
 				})
 				tx.setSequence(from_wallet.sequence)
 				tx.setSecret(from_wallet.secret)
